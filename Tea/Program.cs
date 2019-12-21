@@ -7,55 +7,52 @@ namespace Tea
     {
         static void Main(string[] args)
         {
-            /* setup condtion to find users for tea
-             * 1. distance range (in km)
-             * 2. load user to search for
-             * 3. the meet location
-             */
-            double range = 100;
-            UserGroup allUsers = LoadUserData();
-            User office = new User()
-            {
-                name = "Intercom Dublin office",
-                latitude = 53.339428,
-                longitude = -6.257664
-            };
-            Console.WriteLine(string.Format(@"Looking for: user in {0}km range around {1}...", range, office.name));
-
-            UserGroup userInRange = new TeaMateFinder(office, range, allUsers).UserInRange();
-            Console.WriteLine(string.Format(@"totally: {0} users in range.", userInRange.Users.Count));
-
-            //print out user that in range
-            if (userInRange.Users.Count > 0)
-            {
-                //sort user by id
-                userInRange.Users.Sort((a, b) => a.user_id - b.user_id);
-
-                Console.WriteLine("\nUser ID\t\tName");
-                userInRange.Users.ForEach(
-                    user => Console.WriteLine(string.Format("{0}\t\t{1}", user.user_id, user.name)));
-            }
-
-            Console.ReadKey();
-        }
-
-        public static UserGroup LoadUserData()
-        {
-            var url = @"https://s3.amazonaws.com/intercom-take-home-test/customers.txt";
-
             try
             {
-                var myJSON = new WebClient().DownloadString(url);
-                string[] jsonArr = myJSON.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                return new UserGroup(jsonArr);
+                /* setup condtion to find users for tea
+                 * 1. distance range (in km)
+                 * 2. load user to search for
+                 * 3. the meet location
+                 */
+                double range = 100;
+                var url = @"https://s3.amazonaws.com/intercom-take-home-test/customers.txt";
+                UserGroup allUsers = UserGroup.LoadUserGroup(url);
+                User office = new User()
+                {
+                    name = "Intercom Dublin office",
+                    latitude = 53.339428,
+                    longitude = -6.257664
+                };
+                Console.WriteLine(string.Format(@"Looking for: user in {0}km range around {1}...", range, office.name));
+
+                UserGroup userInRange = new TeaMateFinder(office, range, allUsers).UserInRange();
+                Console.WriteLine(string.Format(@"totally: {0} users in range.", userInRange.Users.Count));
+
+                //print out user that in range
+                if (userInRange.Users.Count > 0)
+                {
+                    //sort user by id
+                    userInRange.Users.Sort((a, b) => a.user_id - b.user_id);
+
+                    Console.WriteLine("\nUser ID\t\tName");
+                    userInRange.Users.ForEach(
+                        user => Console.WriteLine(string.Format("{0}\t\t{1}", user.user_id, user.name)));
+                }
             }
             catch (WebException)
             {
-                throw new Exception("Network error, please try later.");
+                Console.WriteLine("Network error, please try later.");
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("unexpected error:" + e.Message);
+            }
+            finally
+            {
+                Console.ReadKey();
             }
         }
     }
-
 
 
     public class TeaMateFinder

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Net;
+using System;
 
 namespace Tea
 {
@@ -17,6 +19,13 @@ namespace Tea
                     Users.Add(JsonConvert.DeserializeObject<User>(s));
                 }
             }
+        }
+
+        public static UserGroup LoadUserGroup(string url)
+        {
+            var myJSON = new WebClient().DownloadString(url);
+            string[] jsonArr = myJSON.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            return new UserGroup(jsonArr);
         }
     }
 
