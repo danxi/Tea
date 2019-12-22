@@ -15,6 +15,8 @@ namespace Tea
                  * 3. the meet location
                  */
                 double range = 100;
+                if (args.Length > 0) double.TryParse(args[0], out range);
+
                 var url = @"https://s3.amazonaws.com/intercom-take-home-test/customers.txt";
                 UserGroup allUsers = UserGroup.LoadUserGroup(url);
                 User office = new User()
