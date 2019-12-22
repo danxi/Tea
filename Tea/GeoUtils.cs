@@ -12,7 +12,7 @@ namespace Tea
     public class GeoUtils
     {
         //take the earch mean radius as 6371km. https://en.wikipedia.org/wiki/Earth_radius#Mean_radius
-        const int EARTH_RADIUS = 6371;
+        public const int EARTH_RADIUS = 6371;
 
         /// <summary>
         /// Calc the central angle in sphere. https://en.wikipedia.org/wiki/Great-circle_distance 

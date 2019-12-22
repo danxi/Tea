@@ -40,19 +40,40 @@ namespace Tea
         {
             get
             {
-                return new GeoPosition
-                {
-                    LongitudeInRadians = longitude.ToRadians(),
-                    LatitudeInRadians = latitude.ToRadians()
-                };
+                return new GeoPosition(latitude, longitude);
             }
         }
     }
 
-    public struct GeoPosition
+    public class GeoPosition
     {
-        public double LongitudeInRadians;
-        public double LatitudeInRadians;
+        public Double Latitude { get; private set; }
+        public Double Longitude { get; private set; }
+
+        public double LatitudeInRadians
+        {
+            get
+            {
+                return Latitude.ToRadians();
+            }
+        }
+        public double LongitudeInRadians
+        {
+            get
+            {
+                return Longitude.ToRadians();
+            }
+        }
+
+        public GeoPosition(double latitude, double longitude)
+        {
+            if (Math.Abs(latitude) > 90 || Math.Abs(Longitude) > 180)
+            {
+                throw new ArgumentOutOfRangeException(null, "the place is not on earth::(((");
+            }
+            Latitude = latitude;
+            Longitude = longitude;
+        }
     }
 }
 
